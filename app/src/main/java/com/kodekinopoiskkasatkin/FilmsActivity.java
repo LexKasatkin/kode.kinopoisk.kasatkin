@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -34,13 +36,22 @@ public class FilmsActivity extends AppCompatActivity {
     RadioButton rb;
     RadioGroup rg;
     String urlCities = "http://api.kinopoisk.cf/getCityList?countryID=2";
-    String csrf;
+    String urlGenres = "http://api.kinopoisk.cf/getGenres";
     ArrayList<City>cities;
     ArrayList<String> cityNames;
     ArrayList<String> cityIDs;
     String cityID;
     String cityName;
     EditText etCity;
+
+    ArrayList<String> genreNames;
+    ArrayList<String> genreIDs;
+    String genreID;
+    String genreName;
+    EditText etGenres;
+
+    Button ibCity;
+    Button ibGenre;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +75,13 @@ getSupportActionBar().setTitle("");
             cities=new ArrayList<City>();
             cityIDs=new ArrayList<String>();
             cityNames=new ArrayList<String>();
+            genreIDs=new ArrayList<String>();
+            genreNames=new ArrayList<String>();
             etCity=(EditText)findViewById(R.id.etCity);
+            etGenres=(EditText)findViewById(R.id.etGenres);
             etCity.setSelected(false);
+            ibCity=(Button)findViewById(R.id.ibCity);
+            ibGenre=(Button)findViewById(R.id.ibGenre);
         }
 
         @Override
@@ -95,6 +111,25 @@ getSupportActionBar().setTitle("");
                             cities.add(city);
                         }
                     }
+
+                HttpClient httpClient1 = new DefaultHttpClient();
+                HttpGet httpGet1 = new HttpGet(urlGenres);
+                HttpResponse httpResponse1 = httpClient1.execute(httpGet1);
+                HttpEntity httpEntity1 = httpResponse1.getEntity();
+                String json_string1 = EntityUtils.toString(httpResponse1.getEntity(), "UTF-8");
+                if(json_string1!=null){
+                    JSONObject jsonObject=new JSONObject(json_string1);
+                    JSONArray jsonArrayGenres=jsonObject.getJSONArray("genreData");
+                    for(int i=0;i<jsonArrayGenres.length();i++){
+                        JSONObject jsonObjectGenre=jsonArrayGenres.getJSONObject(i);
+                        if(jsonObjectGenre.has("genreID")){
+                            genreIDs.add(jsonObjectGenre.getString("genreID"));
+                        }
+                        if(jsonObjectGenre.has("genreName")){
+                            genreNames.add(jsonObjectGenre.getString("genreName"));
+                        }
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
@@ -120,6 +155,8 @@ getSupportActionBar().setTitle("");
                                     cityName = cityNames.get(i);
                                     etCity.setText(cityName);
                                     dialog.dismiss();
+                                    ibCity.setEnabled(true);
+                                    ibCity.setVisibility(View.VISIBLE);
                                 } else {
                                     etCity.setText("");
                                     dialog.dismiss();
@@ -127,6 +164,52 @@ getSupportActionBar().setTitle("");
                             }
                         });
                     }
+                }
+            });
+
+            etGenres.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+                @Override
+                public void onFocusChange(View v, boolean hasFocus) {
+                    if(hasFocus) {
+                        showRadioButtonDialog(genreNames);
+                        rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                if (dialog.findViewById(rg.getCheckedRadioButtonId()) != null) {
+                                    int i = rg.indexOfChild(dialog.findViewById(rg.getCheckedRadioButtonId()));
+                                    genreID = genreIDs.get(i);
+                                    genreName = genreNames.get(i);
+                                    etGenres.setText(genreName);
+                                    dialog.dismiss();
+                                    ibGenre.setEnabled(true);
+                                    ibGenre.setVisibility(View.VISIBLE);
+                                } else {
+                                    etGenres.setText("");
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+            ibGenre.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ibGenre.setEnabled(false);
+                    ibGenre.setVisibility(View.INVISIBLE);
+                    etGenres.setText(null);
+                    genreID=null;
+                    genreName=null;
+                }
+            });
+            ibCity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ibCity.setEnabled(false);
+                    ibCity.setVisibility(View.INVISIBLE);
+                    etCity.setText(null);
+                    cityName=null;
+                    cityID=null;
                 }
             });
         }
