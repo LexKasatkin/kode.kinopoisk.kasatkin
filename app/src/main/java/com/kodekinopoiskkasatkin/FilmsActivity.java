@@ -1,13 +1,141 @@
 package com.kodekinopoiskkasatkin;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import cz.msebera.android.httpclient.HttpEntity;
+import cz.msebera.android.httpclient.HttpResponse;
+import cz.msebera.android.httpclient.client.HttpClient;
+import cz.msebera.android.httpclient.client.methods.HttpGet;
+import cz.msebera.android.httpclient.impl.client.DefaultHttpClient;
+import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class FilmsActivity extends AppCompatActivity {
+    String urlFilms="http://api.kinopoisk.cf/getTodayFilms?date=";
+    String cityID;
+    String genreName;
+    String json_string;
+    ArrayList<Film>filmArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_films);
+        getSupportActionBar().setTitle("Фильмы в прокате");
+        cityID=getIntent().getStringExtra("city");
+        genreName=getIntent().getStringExtra("genre");
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.filter:
+                    Intent intent = new Intent(this, FilterActivity.class);
+                    startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.films_menu, menu);
+        return true;
+    }
+
+    public class CountryTask extends AsyncTask<String, Void, ArrayList<Film>> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            filmArrayList=new ArrayList<Film>();
+        }
+
+        @Override
+        protected ArrayList<Film> doInBackground(String... urls) {
+
+            try {
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(urlFilms);
+                HttpResponse httpResponse = null;
+                httpResponse = httpClient.execute(httpGet);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                json_string = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+                if(json_string!=null) {
+                    JSONObject jsonObject = new JSONObject(json_string);
+                    JSONArray jsonArrayFilms=jsonObject.getJSONArray("filmsData");
+                    for(int i=0; i<jsonArrayFilms.length();i++){
+                        JSONObject jsonObjectFilm=jsonArrayFilms.getJSONObject(i);
+                        Film film=new Film();
+                        if(jsonObjectFilm.has("type")){
+                            film.setType(jsonObjectFilm.getString("type"));
+                        }
+                        if(jsonObjectFilm.has("id")){
+                            film.setId(jsonObjectFilm.getString("id"));
+                        }
+                        if(jsonObjectFilm.has("nameRU")){
+                            film.setNameRU(jsonObjectFilm.getString("nameRU"));
+                        }
+                        if(jsonObjectFilm.has("nameEN")){
+                            film.setNameEN(jsonObjectFilm.getString("nameEN"));
+                        }
+                        if(jsonObjectFilm.has("year")){
+                            film.setYear(jsonObjectFilm.getString("year"));
+                        }
+                        if(jsonObjectFilm.has("cinemaHallCount")){
+                            film.setCinemaHallCount(jsonObjectFilm.getString("cinemaHallCount"));
+                        }
+                        if(jsonObjectFilm.has("is3D")){
+                            film.setIs3D(jsonObjectFilm.getString("is3D"));
+                        }
+                        if(jsonObjectFilm.has("rating")){
+                            film.setRating(jsonObjectFilm.getString("rating"));
+                        }
+                        if(jsonObjectFilm.has("posterURL")){
+                            film.setPosterURL(jsonObjectFilm.getString("posterURL"));
+                        }
+                        if(jsonObjectFilm.has("filmLength")){
+                            film.setFilmLength(jsonObjectFilm.getString("filmLength"));
+                        }
+                        if(jsonObjectFilm.has("country")){
+                            film.setCountry(jsonObjectFilm.getString("country"));
+                        }
+                        if(jsonObjectFilm.has("genre")){
+                            film.setGenre(jsonObjectFilm.getString("genre"));
+                        }
+                        if(jsonObjectFilm.has("filmLength")){
+                            film.setFilmLength(jsonObjectFilm.getString("filmLength"));
+                        }
+                        if(jsonObjectFilm.has("premiereRU")){
+                            film.setPremiereRU(jsonObjectFilm.getString("premiereRU"));
+                        }
+                        filmArrayList.add(film);
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return filmArrayList;
+        }
+        @Override
+        protected void onPostExecute(ArrayList<Film> jsonArray) {
+
+        }
+        }
 }

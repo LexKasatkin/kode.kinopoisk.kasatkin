@@ -55,7 +55,7 @@ public class FilterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
-getSupportActionBar().setTitle("");
+        getSupportActionBar().setTitle("Фильтр");
         CountryTask countryTask=new CountryTask();
         countryTask.execute();
 
@@ -265,19 +265,15 @@ getSupportActionBar().setTitle("");
 
     private void showRadioButtonDialog(ArrayList<String> arrayList) {
 
-        // custom dialogmel
         dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.rg_dialog);
-//        ivSearchOK=(ImageView)dialog.findViewById(R.id.ivSearchOK);
 
         ArrayList<String> stringList=new ArrayList<>();  // here is list
 
         rg = (RadioGroup) dialog.findViewById(R.id.radio_group);
         for(int i=0;i<arrayList.size();i++){
             rb=new RadioButton(this); // dynamically creating RadioButton and adding to RadioGroup.
-//            rb.setButtonTintList(ColorStateList.valueOf(R.color.colorAccent));
-//            rb.setHighlightColor(R.color.colorAccent);
             rb.setText(arrayList.get(i).toString());
             rg.addView(rb);
         }
@@ -296,6 +292,8 @@ getSupportActionBar().setTitle("");
                     toast.show();
                 }else {
                     Intent intent = new Intent(this, FilmsActivity.class);
+                    intent.putExtra("city", cityID);
+                    intent.putExtra("genre", genreName);
                     startActivity(intent);
                 }
                 return true;
