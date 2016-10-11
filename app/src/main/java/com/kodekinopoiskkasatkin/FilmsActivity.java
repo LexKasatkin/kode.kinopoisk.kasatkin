@@ -35,6 +35,7 @@ public class FilmsActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Фильмы в прокате");
         cityID=getIntent().getStringExtra("city");
         genreName=getIntent().getStringExtra("genre");
+        urlFilms=urlFilms+"&cityID="+cityID.toString();
     }
 
     @Override
