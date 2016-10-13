@@ -1,6 +1,7 @@
 package com.kodekinopoiskkasatkin;
 
-import android.provider.ContactsContract;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -22,12 +25,14 @@ class RVAdapterFilms extends RecyclerView.Adapter<RVAdapterFilms.FilmsViewHolder
         TextView filmYear;
         TextView filmDesc;
         ImageView ivPoster;
+        TextView filmRate;
         FilmsViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
             filmName = (TextView)itemView.findViewById(R.id.tvFilmName);
             filmID = (TextView)itemView.findViewById(R.id.tvFilmID);
             filmYear=(TextView)itemView.findViewById(R.id.tvFilmYear);
+            filmRate=(TextView)itemView.findViewById(R.id.tvRate);
             ivPoster=(ImageView)itemView.findViewById(R.id.iv);
             filmDesc=(TextView)itemView.findViewById(R.id.tvFilmDescription);
         }
@@ -65,19 +70,17 @@ class RVAdapterFilms extends RecyclerView.Adapter<RVAdapterFilms.FilmsViewHolder
         if(films.get(i).genre!=null) {
             filmsViewHolder.filmDesc.setText(films.get(i).genre);
         }
-//        if(users.get(i).username!=null) {
-//            usersViewHolder.userActive.setText(users.get(i).username);
-//        }
+        if(films.get(i).rating!=null) {
+            filmsViewHolder.filmRate.setText(films.get(i).rating);
+        }
         filmsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String id=personViewHolder.userID.getText().toString();
-//                String name=personViewHolder.userName.getText().toString();
-//                Context context = v.getContext();
-//                Intent intent = new Intent(context, ObjectActivity.class);
-//                intent.putExtra("id", id);
-//                intent.putExtra("name",name);
-//                context.startActivity(intent);
+                String id=filmsViewHolder.filmID.getText().toString();
+                Context context = v.getContext();
+                Intent intent = new Intent(context, FilmActivity.class);
+                intent.putExtra("id", id);
+                context.startActivity(intent);
             }
         });
     }
@@ -86,5 +89,4 @@ class RVAdapterFilms extends RecyclerView.Adapter<RVAdapterFilms.FilmsViewHolder
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
 }

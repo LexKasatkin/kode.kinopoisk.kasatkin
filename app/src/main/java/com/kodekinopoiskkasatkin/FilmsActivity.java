@@ -1,9 +1,12 @@
 package com.kodekinopoiskkasatkin;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -27,15 +30,20 @@ public class FilmsActivity extends AppCompatActivity {
     String genreName;
     String json_string;
     ArrayList<Film>filmArrayList;
+    RecyclerView rvFilms;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_films);
         getSupportActionBar().setTitle("Фильмы в прокате");
+        rvFilms=(RecyclerView)findViewById(R.id.rvFilms);
         cityID=getIntent().getStringExtra("city");
         genreName=getIntent().getStringExtra("genre");
         urlFilms=urlFilms+"&cityID="+cityID.toString();
+        CountryTask countryTask=new CountryTask();
+        countryTask.execute();
     }
 
     @Override
@@ -63,6 +71,7 @@ public class FilmsActivity extends AppCompatActivity {
         protected void onPreExecute() {
             super.onPreExecute();
             filmArrayList=new ArrayList<Film>();
+            showProgressDialog(true);
         }
 
         @Override
@@ -104,6 +113,7 @@ public class FilmsActivity extends AppCompatActivity {
                         }
                         if(jsonObjectFilm.has("rating")){
                             film.setRating(jsonObjectFilm.getString("rating"));
+                            film.rating=film.rating.substring(0, film.rating.indexOf("("));
                         }
                         if(jsonObjectFilm.has("posterURL")){
                             film.setPosterURL(jsonObjectFilm.getString("posterURL"));
@@ -136,7 +146,41 @@ public class FilmsActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(ArrayList<Film> jsonArray) {
+            RVAdapterFilms rvAdapterFilms=new RVAdapterFilms(jsonArray);
+            rvAdapterFilms.notifyDataSetChanged();
+            rvFilms.setAdapter(rvAdapterFilms);
+            rvFilms.setHasFixedSize(true);
+            LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+            llm.setOrientation(LinearLayoutManager.VERTICAL);
+            rvFilms.setLayoutManager(llm);
+            showProgressDialog(false);
+             }
+        }
 
+
+    private void showProgressDialog(boolean visible) {
+        if (visible) {
+            if (progressDialog == null || !progressDialog.isShowing()) {
+                try {
+                    progressDialog = new ProgressDialog(this, R.style.MyTheme);
+                    progressDialog.setProgress(R.drawable.circular_progress_bar);
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            try {
+                if (progressDialog != null && progressDialog.isShowing())
+                    progressDialog.dismiss();
+                progressDialog = null;
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        }
+    }
 }

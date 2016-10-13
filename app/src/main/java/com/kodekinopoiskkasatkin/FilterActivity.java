@@ -1,6 +1,7 @@
 package com.kodekinopoiskkasatkin;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ public class FilterActivity extends AppCompatActivity {
     String cityID;
     String cityName;
     EditText etCity;
+    ProgressDialog progressDialog;
 
     ArrayList<String> genreNames;
     ArrayList<String> genreIDs;
@@ -70,6 +72,7 @@ public class FilterActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            showProgressDialog(true);
             cities=new ArrayList<City>();
             cityIDs=new ArrayList<String>();
             cityNames=new ArrayList<String>();
@@ -260,6 +263,7 @@ public class FilterActivity extends AppCompatActivity {
                     cityID=null;
                 }
             });
+            showProgressDialog(false);
         }
     }
 
@@ -309,4 +313,30 @@ public class FilterActivity extends AppCompatActivity {
         return true;
     }
 
+
+    private void showProgressDialog(boolean visible) {
+        if (visible) {
+            if (progressDialog == null || !progressDialog.isShowing()) {
+                try {
+                    progressDialog = new ProgressDialog(this, R.style.MyTheme);
+                    progressDialog.setProgress(R.drawable.circular_progress_bar);
+                    progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            try {
+                if (progressDialog != null && progressDialog.isShowing())
+                    progressDialog.dismiss();
+                progressDialog = null;
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
