@@ -1,9 +1,13 @@
 package com.kodekinopoiskkasatkin;
 
+import java.util.Comparator;
+import java.util.InputMismatchException;
+import java.util.Objects;
+
 /**
  * Created by root on 11.10.16.
  */
-public class Film {
+public class Film  implements Comparable{
     String type;
     String id;
     String nameRU;
@@ -11,12 +15,16 @@ public class Film {
     String year;
     String cinemaHallCount;
     String is3D;
-    String rating;
+    Double rating;
     String posterURL;
     String filmLength;
     String country;
     String genre;
     String premiereRU;
+    String description;
+    String slogan;
+    String ratingAgeLimits;
+    RatingData ratingData;
 
 
     public void setCinemaHallCount(String cinemaHallCount) {
@@ -59,7 +67,7 @@ public class Film {
         this.premiereRU = premiereRU;
     }
 
-    public void setRating(String rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
@@ -111,8 +119,40 @@ public class Film {
         return premiereRU;
     }
 
-    public String getRating() {
+    public Double getRating() {
         return rating;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setRatingAgeLimits(String ratingAgeLimits) {
+        this.ratingAgeLimits = ratingAgeLimits;
+    }
+
+    public void setRatingData(RatingData ratingData) {
+        this.ratingData = ratingData;
+    }
+
+    public void setSlogan(String slogan) {
+        this.slogan = slogan;
+    }
+
+    public RatingData getRatingData() {
+        return ratingData;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getRatingAgeLimits() {
+        return ratingAgeLimits;
+    }
+
+    public String getSlogan() {
+        return slogan;
     }
 
     public String getType() {
@@ -122,4 +162,17 @@ public class Film {
     public String getYear() {
         return year;
     }
+
+    public int compareTo(Object o1) {
+        int i ;
+        Film l=(Film) o1;
+        if (this.rating ==l.rating)
+            i= 0;
+        else if (this.rating > l.rating)
+            i= 1;
+        else
+            i= -1;
+        return i;
+    }
 }
+

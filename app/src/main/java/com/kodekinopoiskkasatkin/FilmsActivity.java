@@ -1,6 +1,7 @@
 package com.kodekinopoiskkasatkin;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,9 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
@@ -38,6 +42,7 @@ public class FilmsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_films);
         getSupportActionBar().setTitle("Фильмы в прокате");
+        filmArrayList=new ArrayList<Film>();
         rvFilms=(RecyclerView)findViewById(R.id.rvFilms);
         cityID=getIntent().getStringExtra("city");
         genreName=getIntent().getStringExtra("genre");
@@ -52,6 +57,27 @@ public class FilmsActivity extends AppCompatActivity {
             case R.id.filter:
                     Intent intent = new Intent(this, FilterActivity.class);
                     startActivity(intent);
+                return true;
+            case R.id.sort_to:
+                Collections.sort(filmArrayList); // альтернатива
+                RVAdapterFilms rvAdapterFilms=new RVAdapterFilms(filmArrayList);
+                rvAdapterFilms.notifyDataSetChanged();
+                rvFilms.setAdapter(rvAdapterFilms);
+                rvFilms.setHasFixedSize(true);
+                LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+                llm.setOrientation(LinearLayoutManager.VERTICAL);
+                rvFilms.setLayoutManager(llm);
+                return true;
+            case R.id.sort_down:
+                Collections.sort(filmArrayList); // альтернатива
+                Collections.reverse(filmArrayList);
+                RVAdapterFilms rvAdapterFilms1=new RVAdapterFilms(filmArrayList);
+                rvAdapterFilms1.notifyDataSetChanged();
+                rvFilms.setAdapter(rvAdapterFilms1);
+                rvFilms.setHasFixedSize(true);
+                LinearLayoutManager llm1 = new LinearLayoutManager(getApplicationContext());
+                llm1.setOrientation(LinearLayoutManager.VERTICAL);
+                rvFilms.setLayoutManager(llm1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -70,7 +96,7 @@ public class FilmsActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            filmArrayList=new ArrayList<Film>();
+
             showProgressDialog(true);
         }
 
@@ -112,8 +138,11 @@ public class FilmsActivity extends AppCompatActivity {
                             film.setIs3D(jsonObjectFilm.getString("is3D"));
                         }
                         if(jsonObjectFilm.has("rating")){
-                            film.setRating(jsonObjectFilm.getString("rating"));
-                            film.rating=film.rating.substring(0, film.rating.indexOf("("));
+                            String s=(jsonObjectFilm.getString("rating"));
+                            s=s.substring(0, s.indexOf("(")-1);
+                            film.setRating(Double.valueOf(s));
+                        }else if(!jsonObjectFilm.has("rating")){
+                            film.setRating(0.0);
                         }
                         if(jsonObjectFilm.has("posterURL")){
                             film.setPosterURL(jsonObjectFilm.getString("posterURL"));

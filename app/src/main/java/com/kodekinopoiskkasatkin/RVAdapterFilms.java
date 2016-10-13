@@ -70,8 +70,10 @@ class RVAdapterFilms extends RecyclerView.Adapter<RVAdapterFilms.FilmsViewHolder
         if(films.get(i).genre!=null) {
             filmsViewHolder.filmDesc.setText(films.get(i).genre);
         }
-        if(films.get(i).rating!=null) {
-            filmsViewHolder.filmRate.setText(films.get(i).rating);
+        if(films.get(i).rating!=0) {
+            filmsViewHolder.filmRate.setText(String.valueOf(films.get(i).rating));
+        } else if(films.get(i).rating==0){
+            filmsViewHolder.filmRate.setText("Нет рейтинга");
         }
         filmsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
