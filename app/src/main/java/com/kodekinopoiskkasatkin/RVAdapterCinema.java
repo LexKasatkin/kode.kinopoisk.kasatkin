@@ -1,5 +1,6 @@
 package com.kodekinopoiskkasatkin;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -8,8 +9,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.w3c.dom.Text;
 
@@ -27,6 +36,7 @@ class RVAdapterCinema extends RecyclerView.Adapter<RVAdapterCinema.CinemaViewHol
         TextView filmDesc;
         ImageView ivMap;
         TextView filmRate;
+
         CinemaViewHolder(View itemView) {
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv);
@@ -38,7 +48,7 @@ class RVAdapterCinema extends RecyclerView.Adapter<RVAdapterCinema.CinemaViewHol
             filmDesc=(TextView)itemView.findViewById(R.id.tvFilmDescription);
             filmDesc.setBackgroundColor(R.color.colorPrimary);
             filmDesc.setTextSize(20);
-            filmDesc.setTextColor(Color.GREEN);
+            filmDesc.setTextColor(Color.WHITE);
         }
     }
 
@@ -48,7 +58,7 @@ class RVAdapterCinema extends RecyclerView.Adapter<RVAdapterCinema.CinemaViewHol
         this.cinemaArrayList = cinemaArrayList;
     }
 
-
+    Context ctx;
     @Override
     public int getItemCount() {
         return cinemaArrayList.size();
@@ -58,6 +68,7 @@ class RVAdapterCinema extends RecyclerView.Adapter<RVAdapterCinema.CinemaViewHol
     @Override
     public CinemaViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.film_context,  viewGroup, false);
+        ctx=viewGroup.getContext();
         CinemaViewHolder pvh = new CinemaViewHolder(v);
         return pvh;
     }
@@ -77,23 +88,36 @@ class RVAdapterCinema extends RecyclerView.Adapter<RVAdapterCinema.CinemaViewHol
         }
         if(cinemaArrayList.get(i).getLat()!=null) {
             cinemaViewHolder.filmRate.setText(cinemaArrayList.get(i).getLat());
-            cinemaViewHolder.filmRate.setTextColor(Color.WHITE);
+            cinemaViewHolder.filmRate.setTextColor(Color.TRANSPARENT);
         }
         String s=new String();
         for(int j=0;j<cinemaArrayList.get(i).getTime().size();j++){
-            s=s+"   "+cinemaArrayList.get(i).getTime().get(j)+"   ";
+            s=s+cinemaArrayList.get(i).getTime().get(j)+"     ";
         }
         cinemaViewHolder.filmDesc.setText(s);
-//        cinemaViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String id=cinemaViewHolder.filmID.getText().toString();
-//                Context context = v.getContext();
-//                Intent intent = new Intent(context, FilmActivity.class);
-//                intent.putExtra("id", id);
-//                context.startActivity(intent);
-//            }
-//        });
+        cinemaViewHolder.filmID.setTextColor(Color.TRANSPARENT);
+        cinemaViewHolder.ivMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Dialog dialog = new Dialog(ctx);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_map);
+                dialog.show();
+                GoogleMap googleMap;
+                MapView mMapView = (MapView) dialog.findViewById(R.id.mapView);
+                MapsInitializer.initialize(ctx);
+
+                mMapView = (MapView) dialog.findViewById(R.id.mapView);
+                if (mMapView != null) {
+                    googleMap = mMapView.getMap();
+//                    googleMap.addMarker(new MarkerOptions()
+//                            .anchor(0.0f, 1.0f)
+//                            .position(new LatLng(55.854049, 13.661331)));
+                }
+//                mMapView.onCreate(dialog.onSaveInstanceState());
+//                mMapView.onResume();// needed to get the map to display immediately
+            }
+        });
     }
 
     @Override

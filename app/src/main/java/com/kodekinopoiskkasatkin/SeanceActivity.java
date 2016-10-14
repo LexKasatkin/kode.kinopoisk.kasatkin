@@ -95,14 +95,15 @@ public class SeanceActivity extends AppCompatActivity {
                                     cinema.setCinemaName(jsonObjectItem.getString("cinemaName"));
                                 }
                                 if(jsonObjectItem.has("seance")){
+                                    seances=new ArrayList<String>();
                                     JSONArray jsonArraySeances=jsonObjectItem.getJSONArray("seance");
                                     for(int j=0;j<jsonArraySeances.length();j++){
-                                        seances=new ArrayList<String>();
-                                        JSONObject jsonObjectTime=jsonArraySeances.getJSONObject(i);
+                                        JSONObject jsonObjectTime=jsonArraySeances.getJSONObject(j);
+                                        String seance = new String();
                                         if(jsonObjectTime.has("time")) {
-                                            String seance = jsonObjectTime.getString("time");
-                                            seances.add(seance);
+                                            seance = jsonObjectTime.getString("time");
                                         }
+                                        seances.add(seance);
                                     }
                                 }
                                 cinema.setTime(seances);

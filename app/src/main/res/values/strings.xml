@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">КиноПоиск</string>
+    <string name="google_android_map_api_key">AIzaSyBkIYpZWVLYS_TAv--z4VERQNl26n0Xqqk</string>
 </resources>
