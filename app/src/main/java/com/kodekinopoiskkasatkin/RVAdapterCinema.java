@@ -46,9 +46,7 @@ class RVAdapterCinema extends RecyclerView.Adapter<RVAdapterCinema.CinemaViewHol
             filmRate=(TextView)itemView.findViewById(R.id.tvRate);
             ivMap=(ImageView)itemView.findViewById(R.id.ivMap);
             filmDesc=(TextView)itemView.findViewById(R.id.tvFilmDescription);
-            filmDesc.setBackgroundColor(R.color.colorPrimary);
             filmDesc.setTextSize(20);
-            filmDesc.setTextColor(Color.WHITE);
         }
     }
 

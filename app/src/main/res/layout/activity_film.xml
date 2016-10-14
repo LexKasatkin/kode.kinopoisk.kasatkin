@@ -28,8 +28,8 @@
     android:padding="16dp">
 
     <ImageView
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:id="@+id/ivBigPoster"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -95,9 +95,9 @@
         android:id="@+id/tvRatingAgeLimits"
         android:textColor="@color/colorPrimary"
         android:textSize="11sp"
-        android:layout_below="@+id/ivBigPoster"
-        android:layout_alignLeft="@+id/ivBigPoster"
-        android:layout_alignStart="@+id/ivBigPoster" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
 </RelativeLayout>
         </android.support.v7.widget.CardView>
 
