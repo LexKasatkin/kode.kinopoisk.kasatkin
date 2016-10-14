@@ -1,9 +1,12 @@
 package com.kodekinopoiskkasatkin;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import org.json.JSONException;
@@ -24,12 +27,15 @@ public class FilmActivity extends AppCompatActivity {
     String json_string;
     ProgressDialog progressDialog;
     Film film;
+    String idFilm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film);
-        String id=getIntent().getStringExtra("id");
-        urlFilm=urlFilm+id;
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        idFilm=getIntent().getStringExtra("id");
+        urlFilm=urlFilm+idFilm;
         FilmTask filmTask=new FilmTask();
         filmTask.execute();
     }
@@ -193,28 +199,28 @@ public class FilmActivity extends AppCompatActivity {
             }
             if(film.ratingData!=null){
                 if(film.ratingData.rating!=null){
-                    tvRating.setText("Рейтинг КиноПоиска: "+film.ratingData.rating);
+                    tvRating.setText(film.ratingData.rating);
                 }
                 if(film.ratingData.ratingVoteCount!=null){
                     tvRatingCount.setText(film.ratingData.ratingVoteCount);
                 }
 
                 if(film.ratingData.ratingAwait!=null){
-                    tvRatingAwait.setText("Рейтинг ожидания: "+film.ratingData.ratingAwait);
+                    tvRatingAwait.setText(film.ratingData.ratingAwait);
                 }
                 if(film.ratingData.ratingAwaitCount!=null){
                     tvRatingAwaitCount.setText(film.ratingData.ratingAwaitCount);
                 }
 
                 if(film.ratingData.ratingFilmCritics!=null){
-                    tvRatingCritics.setText("Рейтинг кинокритиков: "+film.ratingData.ratingFilmCritics);
+                    tvRatingCritics.setText(film.ratingData.ratingFilmCritics);
                 }
                 if(film.ratingData.ratingFilmCriticsVoteCounts!=null){
                     tvRatingCriticsCount.setText(film.ratingData.ratingFilmCriticsVoteCounts);
                 }
 
                 if(film.ratingData.ratingGoodReview!=null){
-                    tvRatingGood.setText("Положительные рецензии: "+film.ratingData.ratingGoodReview);
+                    tvRatingGood.setText(film.ratingData.ratingGoodReview);
                 }
                 if(film.ratingData.ratingGoodReviewCount!=null){
                     tvRatingGoodCount.setText(film.ratingData.ratingGoodReviewCount);
@@ -249,5 +255,27 @@ public class FilmActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.seance:
+                Intent intent=new Intent(this, SeanceActivity.class);
+                intent.putExtra("FILMID", idFilm);
+                startActivity(intent);
+                return true;
+            case android.R.id.home:
+                this.onBackPressed();
+                this.finish();
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.film_menu, menu);
+        return true;
     }
 }

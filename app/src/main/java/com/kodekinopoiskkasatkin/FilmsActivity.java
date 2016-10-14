@@ -3,7 +3,9 @@ package com.kodekinopoiskkasatkin;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -63,11 +65,19 @@ public class FilmsActivity extends AppCompatActivity {
 
     Button ibCity;
     Button ibGenre;
+    private static final String MY_SETTINGS = "my_settings";
+    SharedPreferences sp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_films);
-        getSupportActionBar().setTitle("Фильмы в прокате "+"г.Калининград");
+        sp = getSharedPreferences(MY_SETTINGS,
+                Context.MODE_PRIVATE);
+        if(sp.getString("CITYNAME", null)!=null){
+            getSupportActionBar().setTitle("Фильмы в прокате г."+sp.getString("CITYNAME",null));
+        }else {
+            getSupportActionBar().setTitle("Фильмы в прокате " + "г.Калининград");
+        }
         rvFilms=(RecyclerView)findViewById(R.id.rvFilms);
         CountryTask countryTask=new CountryTask();
         countryTask.execute();
@@ -126,6 +136,12 @@ public class FilmsActivity extends AppCompatActivity {
                             cityName = cityNames.get(i);
                             dialog.dismiss();
                             getSupportActionBar().setTitle("Фильмы в прокате г."+cityName);
+                             sp = getSharedPreferences(MY_SETTINGS,
+                                    Context.MODE_PRIVATE);
+                            SharedPreferences.Editor e = sp.edit();
+                            e.putString("CITYID", cityID);
+                            e.putString("CITYNAME",cityName);
+                            e.commit();
                             FilmsTask filmsTask =new FilmsTask();
                             filmsTask.execute();
                         } else {
@@ -151,13 +167,18 @@ public class FilmsActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            sp = getSharedPreferences(MY_SETTINGS,
+                    Context.MODE_PRIVATE);
             filmArrayList=new ArrayList<Film>();
             if(cityID!=null) {
                 urlFilms = urlFilms + "&cityID=" + cityID.toString();
-            }else{
-                cityID="490";
+            }else if (sp.getString("CITYID",null)!=null){
+                cityID=sp.getString("CITYID",null);
                 urlFilms = urlFilms + "&cityID=" + cityID.toString();
 
+            }else {
+                cityID = "490";
+                urlFilms = urlFilms + "&cityID=" + cityID.toString();
             }
             showProgressDialog(true);
         }

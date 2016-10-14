@@ -11,7 +11,7 @@
     android:layout_below="@+id/toolbar"
     android:id="@+id/linearLayout"
     android:layout_alignParentBottom="true"
-    android:background="#FFFFFF"
+    android:background="@color/cardview_shadow_end_color"
     android:orientation="vertical">
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -141,7 +141,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tvRating"
-                android:textColor="@color/colorPrimaryText" />
+                android:textColor="@color/colorPrimaryText"
+                android:layout_alignBaseline="@+id/tvRatingCount"
+                android:layout_alignBottom="@+id/tvRatingCount"
+                android:layout_toLeftOf="@+id/tvRatingCount"
+                android:layout_toStartOf="@+id/tvRatingCount"
+                android:layout_marginRight="40dp"
+                android:layout_marginEnd="40dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -149,8 +155,8 @@
                 android:id="@+id/tvRatingCritics"
                 android:textColor="@color/colorPrimaryText"
                 android:layout_below="@+id/tvRating"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
+                android:layout_alignLeft="@+id/tvRating"
+                android:layout_alignStart="@+id/tvRating"
                 android:layout_marginTop="8dp" />
 
             <TextView
@@ -159,8 +165,8 @@
                 android:id="@+id/tvRaitingWait"
                 android:textColor="@color/colorPrimaryText"
                 android:layout_below="@+id/tvRatingCritics"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
+                android:layout_alignLeft="@+id/tvRatingCritics"
+                android:layout_alignStart="@+id/tvRatingCritics"
                 android:layout_marginTop="8dp" />
 
             <TextView
@@ -169,8 +175,8 @@
                 android:id="@+id/tvRatingGoodReview"
                 android:textColor="@color/colorPrimaryText"
                 android:layout_below="@+id/tvRaitingWait"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
+                android:layout_alignLeft="@+id/tvRaitingWait"
+                android:layout_alignStart="@+id/tvRaitingWait"
                 android:layout_marginTop="8dp" />
 
             <TextView
@@ -180,8 +186,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginRight="50dp"
-                android:layout_marginEnd="50dp" />
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -208,6 +214,45 @@
                 android:layout_below="@+id/tvRatingWaitCount"
                 android:layout_alignLeft="@+id/tvRatingWaitCount"
                 android:layout_alignStart="@+id/tvRatingWaitCount"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Рейтинг КиноПоиска"
+                android:id="@+id/textView"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Рейтинг кинокритиков"
+                android:id="@+id/textView2"
+                android:layout_below="@+id/textView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Рейтинг ожидания"
+                android:id="@+id/textView3"
+                android:layout_below="@+id/textView2"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Положительные рецензии"
+                android:id="@+id/textView4"
+                android:layout_below="@+id/textView3"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
                 android:layout_marginTop="8dp" />
 
         </RelativeLayout>
