@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:fillViewport="false">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -20,7 +25,7 @@
 <RelativeLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp">
+    android:padding="16dp">
 
     <ImageView
         android:layout_width="64dp"
@@ -33,7 +38,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/tvName"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@+id/ivBigPoster"
@@ -44,7 +48,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/tvEnName"
         android:layout_below="@+id/tvName"
         android:layout_toRightOf="@+id/ivBigPoster"
@@ -56,7 +59,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="v"
         android:id="@+id/tvGenre"
         android:layout_below="@+id/tvEnName"
         android:layout_toRightOf="@+id/ivBigPoster"
@@ -68,7 +70,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New Text"
         android:id="@+id/tvCountryYear"
         android:textColor="@color/colorPrimaryText"
         android:textSize="13sp"
@@ -80,7 +81,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fgfg"
         android:id="@+id/tvSlogan"
         android:textColor="@color/colorPrimary"
         android:textSize="11sp"
@@ -92,7 +92,6 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="v"
         android:id="@+id/tvRatingAgeLimits"
         android:textColor="@color/colorPrimary"
         android:textSize="11sp"
@@ -114,14 +113,107 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp">
+        android:padding="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="tvDescription"
             android:id="@+id/tvDescription"
             android:textColor="@color/colorPrimaryText" />
     </RelativeLayout>
     </android.support.v7.widget.CardView>
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/cv3"
+        app:cardElevation="4dp"
+        android:elevation="4dp"
+        android:layout_margin="4dp"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:background="?android:selectableItemBackground">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRating"
+                android:textColor="@color/colorPrimaryText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRatingCritics"
+                android:textColor="@color/colorPrimaryText"
+                android:layout_below="@+id/tvRating"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRaitingWait"
+                android:textColor="@color/colorPrimaryText"
+                android:layout_below="@+id/tvRatingCritics"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRatingGoodReview"
+                android:textColor="@color/colorPrimaryText"
+                android:layout_below="@+id/tvRaitingWait"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRatingCount"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="50dp"
+                android:layout_marginEnd="50dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRatingCriticsCount"
+                android:layout_below="@+id/tvRatingCount"
+                android:layout_alignLeft="@+id/tvRatingCount"
+                android:layout_alignStart="@+id/tvRatingCount"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRatingWaitCount"
+                android:layout_below="@+id/tvRatingCriticsCount"
+                android:layout_alignLeft="@+id/tvRatingCriticsCount"
+                android:layout_alignStart="@+id/tvRatingCriticsCount"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvRatingGoodReviewCount"
+                android:layout_below="@+id/tvRatingWaitCount"
+                android:layout_alignLeft="@+id/tvRatingWaitCount"
+                android:layout_alignStart="@+id/tvRatingWaitCount"
+                android:layout_marginTop="8dp" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.CardView>
+
+
+
     </LinearLayout>
+</ScrollView>

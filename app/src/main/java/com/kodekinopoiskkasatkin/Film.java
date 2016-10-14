@@ -25,6 +25,7 @@ public class Film  implements Comparable{
     String slogan;
     String ratingAgeLimits;
     RatingData ratingData;
+    String ratingMPAA;
 
 
     public void setCinemaHallCount(String cinemaHallCount) {
@@ -33,6 +34,10 @@ public class Film  implements Comparable{
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    public void setRatingMPAA(String ratingMPAA) {
+        this.ratingMPAA = ratingMPAA;
     }
 
     public void setFilmLength(String filmLength) {

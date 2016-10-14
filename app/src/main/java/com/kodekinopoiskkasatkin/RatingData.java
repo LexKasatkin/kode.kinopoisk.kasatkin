@@ -5,24 +5,29 @@ package com.kodekinopoiskkasatkin;
  */
 public class RatingData {
     String ratingGoodReview;
-    String getRatingGoodReviewVoteCount;
+    String ratingGoodReviewCount;
+    String setRatingGoodReviewVoteCount;
     String rating;
     String ratingVoteCount;
     String ratingAwait;
     String ratingAwaitCount;
     String ratingFilmCritics;
-    String getRatingFilmCriticsVoteCounts;
+    String ratingFilmCriticsVoteCounts;
 
     public void setRating(String rating) {
         this.rating = rating;
     }
 
-    public void setGetRatingFilmCriticsVoteCounts(String getRatingFilmCriticsVoteCounts) {
-        this.getRatingFilmCriticsVoteCounts = getRatingFilmCriticsVoteCounts;
+    public void setRatingGoodReviewCount(String ratingGoodReviewCount) {
+        this.ratingGoodReviewCount = ratingGoodReviewCount;
     }
 
-    public void setGetRatingGoodReviewVoteCount(String getRatingGoodReviewVoteCount) {
-        this.getRatingGoodReviewVoteCount = getRatingGoodReviewVoteCount;
+    public void setRatingFilmCriticsVoteCounts(String ratingFilmCriticsVoteCounts) {
+        this.ratingFilmCriticsVoteCounts = ratingFilmCriticsVoteCounts;
+    }
+
+    public void setSetRatingGoodReviewVoteCount(String setRatingGoodReviewVoteCount) {
+        this.setRatingGoodReviewVoteCount = setRatingGoodReviewVoteCount;
     }
 
     public void setRatingAwait(String ratingAwait) {

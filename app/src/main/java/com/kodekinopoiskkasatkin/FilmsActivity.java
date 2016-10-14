@@ -1,5 +1,6 @@
 package com.kodekinopoiskkasatkin;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
@@ -10,6 +11,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,23 +37,38 @@ import cz.msebera.android.httpclient.util.EntityUtils;
 
 public class FilmsActivity extends AppCompatActivity {
     String urlFilms="http://api.kinopoisk.cf/getTodayFilms?date=";
-    String cityID;
-    String genreName;
     String json_string;
     ArrayList<Film>filmArrayList;
     RecyclerView rvFilms;
+
+
+    Dialog dialog;
+    RadioButton rb;
+    RadioGroup rg;
+    String urlCities = "http://api.kinopoisk.cf/getCityList?countryID=2";
+    String urlGenres = "http://api.kinopoisk.cf/getGenres";
+    ArrayList<City>cities;
+    ArrayList<String> cityNames;
+    ArrayList<String> cityIDs;
+    String cityID;
+    String cityName;
+    EditText etCity;
     ProgressDialog progressDialog;
 
+    ArrayList<String> genreNames;
+    ArrayList<String> genreIDs;
+    String genreID;
+    String genreName;
+    EditText etGenres;
+
+    Button ibCity;
+    Button ibGenre;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_films);
-        getSupportActionBar().setTitle("Фильмы в прокате");
-        filmArrayList=new ArrayList<Film>();
+        getSupportActionBar().setTitle("Фильмы в прокате "+"г.Калининград");
         rvFilms=(RecyclerView)findViewById(R.id.rvFilms);
-        cityID=getIntent().getStringExtra("city");
-        genreName=getIntent().getStringExtra("genre");
-        urlFilms=urlFilms+"&cityID="+cityID.toString();
         CountryTask countryTask=new CountryTask();
         countryTask.execute();
     }
@@ -54,10 +76,6 @@ public class FilmsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.filter:
-                    Intent intent = new Intent(this, FilterActivity.class);
-                    startActivity(intent);
-                return true;
             case R.id.sort_to:
                 Collections.sort(filmArrayList); // альтернатива
                 RVAdapterFilms rvAdapterFilms=new RVAdapterFilms(filmArrayList);
@@ -79,6 +97,43 @@ public class FilmsActivity extends AppCompatActivity {
                 llm1.setOrientation(LinearLayoutManager.VERTICAL);
                 rvFilms.setLayoutManager(llm1);
                 return true;
+            case R.id.genre:
+                showRadioButtonDialog(genreNames);
+                rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        if (dialog.findViewById(rg.getCheckedRadioButtonId()) != null) {
+                            int i = rg.indexOfChild(dialog.findViewById(rg.getCheckedRadioButtonId()));
+                            genreID = genreIDs.get(i);
+                            genreName = genreNames.get(i);
+                            dialog.dismiss();
+                            FilmsTask filmsTask =new FilmsTask();
+                            filmsTask.execute();
+                        } else {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                return true;
+            case R.id.cities:
+                showRadioButtonDialog(cityNames);
+                rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        if (dialog.findViewById(rg.getCheckedRadioButtonId()) != null) {
+                            int i = rg.indexOfChild(dialog.findViewById(rg.getCheckedRadioButtonId()));
+                            cityID = cityIDs.get(i);
+                            cityName = cityNames.get(i);
+                            dialog.dismiss();
+                            getSupportActionBar().setTitle("Фильмы в прокате г."+cityName);
+                            FilmsTask filmsTask =new FilmsTask();
+                            filmsTask.execute();
+                        } else {
+                            dialog.dismiss();
+                        }
+                    }
+                });
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -91,12 +146,19 @@ public class FilmsActivity extends AppCompatActivity {
         return true;
     }
 
-    public class CountryTask extends AsyncTask<String, Void, ArrayList<Film>> {
+    public class FilmsTask extends AsyncTask<String, Void, ArrayList<Film>> {
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            filmArrayList=new ArrayList<Film>();
+            if(cityID!=null) {
+                urlFilms = urlFilms + "&cityID=" + cityID.toString();
+            }else{
+                cityID="490";
+                urlFilms = urlFilms + "&cityID=" + cityID.toString();
 
+            }
             showProgressDialog(true);
         }
 
@@ -210,6 +272,100 @@ public class FilmsActivity extends AppCompatActivity {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void showRadioButtonDialog(ArrayList<String> arrayList) {
+
+        dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.rg_dialog);
+
+        ArrayList<String> stringList=new ArrayList<>();  // here is list
+
+        rg = (RadioGroup) dialog.findViewById(R.id.radio_group);
+        for(int i=0;i<arrayList.size();i++){
+            rb=new RadioButton(this); // dynamically creating RadioButton and adding to RadioGroup.
+            rb.setText(arrayList.get(i).toString());
+            rg.addView(rb);
+        }
+
+        dialog.show();
+    }
+
+
+    public class CountryTask extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            showProgressDialog(true);
+            cities=new ArrayList<City>();
+            cityIDs=new ArrayList<String>();
+            cityNames=new ArrayList<String>();
+            genreIDs=new ArrayList<String>();
+            genreNames=new ArrayList<String>();
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+            String response = null;
+
+            try {
+                HttpClient httpClient = new DefaultHttpClient();
+                HttpGet httpGet = new HttpGet(urlCities);
+                HttpResponse httpResponse = httpClient.execute(httpGet);
+                HttpEntity httpEntity = httpResponse.getEntity();
+                String json_string = EntityUtils.toString(httpResponse.getEntity(), "UTF-8");
+                if(json_string!=null){
+                    JSONObject jsonObject=new JSONObject(json_string);
+                    JSONArray jsonArrayCities=jsonObject.getJSONArray("cityData");
+                    for(int i=0;i<jsonArrayCities.length();i++){
+                        City city=new City();
+                        JSONObject jsonObjectCity=jsonArrayCities.getJSONObject(i);
+                        if(jsonObjectCity.has("cityID")){
+                            city.setCityID(jsonObjectCity.getString("cityID"));
+                            cityIDs.add(city.getCityID());
+                        }
+                        if(jsonObjectCity.has("cityName")){
+                            city.setCityName(jsonObjectCity.getString("cityName"));
+                            cityNames.add(city.getCityName());
+                        }
+                        cities.add(city);
+                    }
+                }
+
+                HttpClient httpClient1 = new DefaultHttpClient();
+                HttpGet httpGet1 = new HttpGet(urlGenres);
+                HttpResponse httpResponse1 = httpClient1.execute(httpGet1);
+                HttpEntity httpEntity1 = httpResponse1.getEntity();
+                String json_string1 = EntityUtils.toString(httpResponse1.getEntity(), "UTF-8");
+                if(json_string1!=null){
+                    JSONObject jsonObject=new JSONObject(json_string1);
+                    JSONArray jsonArrayGenres=jsonObject.getJSONArray("genreData");
+                    for(int i=0;i<jsonArrayGenres.length();i++){
+                        JSONObject jsonObjectGenre=jsonArrayGenres.getJSONObject(i);
+                        if(jsonObjectGenre.has("genreID")){
+                            genreIDs.add(jsonObjectGenre.getString("genreID"));
+                        }
+                        if(jsonObjectGenre.has("genreName")){
+                            genreNames.add(jsonObjectGenre.getString("genreName"));
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return response;
+        }
+
+        @Override
+        protected void onPostExecute(String jsonData) {
+            FilmsTask filmsTask =new FilmsTask();
+            filmsTask.execute();
+            showProgressDialog(false);
         }
     }
 }

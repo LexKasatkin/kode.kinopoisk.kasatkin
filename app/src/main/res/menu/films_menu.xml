@@ -2,12 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/filter"
-        android:icon="@drawable/filter"
-        android:orderInCategory="100"
-        android:title="Фильтр"
-        app:showAsAction="always"></item>
-    <item
         android:id="@+id/sort_to"
         android:orderInCategory="100"
         android:icon="@drawable/top"
@@ -18,5 +12,18 @@
         android:orderInCategory="100"
         android:icon="@drawable/down"
         android:title="Сортировка по убыванию рейтинга"
+        app:showAsAction="never"></item>
+
+    <item
+        android:id="@+id/genre"
+        android:orderInCategory="100"
+        android:icon="@drawable/down"
+        android:title="Жанр"
+        app:showAsAction="never"></item>
+    <item
+        android:id="@+id/cities"
+        android:orderInCategory="100"
+        android:icon="@drawable/down"
+        android:title="Город"
         app:showAsAction="never"></item>
 </menu>
