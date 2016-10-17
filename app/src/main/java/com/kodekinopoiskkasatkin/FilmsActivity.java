@@ -17,8 +17,10 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,17 +56,17 @@ public class FilmsActivity extends AppCompatActivity {
     ArrayList<String> cityIDs;
     String cityID;
     String cityName;
-    EditText etCity;
     ProgressDialog progressDialog;
 
     ArrayList<String> genreNames;
     ArrayList<String> genreIDs;
     String genreID;
     String genreName;
-    EditText etGenres;
 
-    Button ibCity;
-    Button ibGenre;
+//    ImageView ivCity;
+//    TextView tvCity;
+    TextView tvGenre;
+    ImageView ivGenre;
     private static final String MY_SETTINGS = "my_settings";
     SharedPreferences sp;
     @Override
@@ -73,12 +75,12 @@ public class FilmsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_films);
         sp = getSharedPreferences(MY_SETTINGS,
                 Context.MODE_PRIVATE);
-        if(sp.getString("CITYNAME", null)!=null){
-            getSupportActionBar().setTitle("Фильмы в прокате г."+sp.getString("CITYNAME",null));
-        }else {
-            getSupportActionBar().setTitle("Фильмы в прокате " + "г.Калининград");
-        }
+        getSupportActionBar().setTitle("Фильмы в прокате");
         rvFilms=(RecyclerView)findViewById(R.id.rvFilms);
+//        ivCity=(ImageView)findViewById(R.id.ivCity);
+        ivGenre=(ImageView)findViewById(R.id.ivGenre);
+//        tvCity=(TextView)findViewById(R.id.tvCity);
+        tvGenre=(TextView)findViewById(R.id.tvGenre);
         CountryTask countryTask=new CountryTask();
         countryTask.execute();
     }
@@ -117,8 +119,35 @@ public class FilmsActivity extends AppCompatActivity {
                             genreID = genreIDs.get(i);
                             genreName = genreNames.get(i);
                             dialog.dismiss();
-                            FilmsTask filmsTask =new FilmsTask();
-                            filmsTask.execute();
+
+                            final ArrayList <Film> filmArrayList2=new ArrayList<Film>();
+                            for(int j=0;j<filmArrayList.size();j++){
+                                for (int k=0;k<filmArrayList.get(j).genre.size();k++){
+                                    if(filmArrayList.get(j).genre.get(k).equals(genreName)){
+                                        filmArrayList2.add(filmArrayList.get(j));
+                                    }
+                                }
+                            }
+                            ivGenre.setImageResource(R.drawable.exit);
+                            tvGenre.setTextSize(15);
+                            tvGenre.setText(genreName);
+                            ivGenre.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    ivGenre.setImageDrawable(null);
+                                    tvGenre.setText(null);
+                                    tvGenre.setTextSize(0);
+                                    FilmsTask filmsTask=new FilmsTask();
+                                    filmsTask.execute();
+                                }
+                            });
+                            RVAdapterFilms rvAdapterFilms=new RVAdapterFilms(filmArrayList2);
+                            rvAdapterFilms.notifyDataSetChanged();
+                            rvFilms.setAdapter(rvAdapterFilms);
+                            rvFilms.setHasFixedSize(true);
+                            LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+                            llm.setOrientation(LinearLayoutManager.VERTICAL);
+                            rvFilms.setLayoutManager(llm);
                         } else {
                             dialog.dismiss();
                         }
@@ -135,12 +164,13 @@ public class FilmsActivity extends AppCompatActivity {
                             cityID = cityIDs.get(i);
                             cityName = cityNames.get(i);
                             dialog.dismiss();
-                            getSupportActionBar().setTitle("Фильмы в прокате г."+cityName);
                              sp = getSharedPreferences(MY_SETTINGS,
                                     Context.MODE_PRIVATE);
                             SharedPreferences.Editor e = sp.edit();
                             e.putString("CITYID", cityID);
                             e.putString("CITYNAME",cityName);
+//                            tvCity.setText(cityName);
+//                            ivCity.setImageResource(R.drawable.exit);
                             e.commit();
                             FilmsTask filmsTask =new FilmsTask();
                             filmsTask.execute();
@@ -150,6 +180,9 @@ public class FilmsActivity extends AppCompatActivity {
                     }
                 });
                 return true;
+            case R.id.refresh:
+                FilmsTask filmsTask=new FilmsTask();
+                filmsTask.execute();
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -237,7 +270,14 @@ public class FilmsActivity extends AppCompatActivity {
                             film.setCountry(jsonObjectFilm.getString("country"));
                         }
                         if(jsonObjectFilm.has("genre")){
-                            film.setGenre(jsonObjectFilm.getString("genre"));
+                            ArrayList<String>genre=new ArrayList<String>();
+                            String gen=jsonObjectFilm.getString("genre");
+                            gen= gen.replace(" ","");
+                            String s[]=gen.trim().split(",");
+                            for(int j=0;j<s.length;j++){
+                                genre.add(s[j]);
+                            }
+                            film.setGenre(genre);
                         }
                         if(jsonObjectFilm.has("filmLength")){
                             film.setFilmLength(jsonObjectFilm.getString("filmLength"));

@@ -68,7 +68,15 @@ class RVAdapterFilms extends RecyclerView.Adapter<RVAdapterFilms.FilmsViewHolder
             filmsViewHolder.filmYear.setText(films.get(i).getNameEN()+" ("+films.get(i).getYear()+")");
         }
         if(films.get(i).genre!=null) {
-            filmsViewHolder.filmDesc.setText(films.get(i).genre);
+            String s=new String();
+            for(int j=0;j<films.get(i).genre.size();j++) {
+                if(j<films.get(i).genre.size()-1) {
+                    s = s + films.get(i).genre.get(j) + ", ";
+                }else if(j==films.get(i).genre.size()-1){
+                    s = s + films.get(i).genre.get(j);
+                }
+                filmsViewHolder.filmDesc.setText(s);
+            }
         }
         if(films.get(i).rating!=0) {
             filmsViewHolder.filmRate.setText(String.valueOf(films.get(i).rating));

@@ -6,24 +6,40 @@
         android:orderInCategory="100"
         android:icon="@drawable/top"
         android:title="Сортировка по возрастанию рейтинга"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
         app:showAsAction="never"></item>
     <item
         android:id="@+id/sort_down"
         android:orderInCategory="100"
         android:icon="@drawable/down"
         android:title="Сортировка по убыванию рейтинга"
-        app:showAsAction="never"></item>
+        android:layout_width="35dp"
+        android:layout_height="50dp"
+        app:showAsAction="never" ></item>
 
     <item
         android:id="@+id/genre"
         android:orderInCategory="100"
         android:icon="@drawable/down"
         android:title="Жанр"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
         app:showAsAction="never"></item>
     <item
         android:id="@+id/cities"
         android:orderInCategory="100"
         android:icon="@drawable/down"
         android:title="Город"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
         app:showAsAction="never"></item>
+    <item
+        android:id="@+id/refresh"
+        android:orderInCategory="100"
+        android:icon="@drawable/refresh"
+        android:title="Обновить"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
+        app:showAsAction="always"></item>
 </menu>

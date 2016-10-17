@@ -1,5 +1,6 @@
 package com.kodekinopoiskkasatkin;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.InputMismatchException;
 import java.util.Objects;
@@ -19,7 +20,7 @@ public class Film  implements Comparable{
     String posterURL;
     String filmLength;
     String country;
-    String genre;
+    ArrayList<String> genre;
     String premiereRU;
     String description;
     String slogan;
@@ -48,7 +49,7 @@ public class Film  implements Comparable{
         this.id = id;
     }
 
-    public void setGenre(String genre) {
+    public void setGenre(ArrayList<String> genre) {
         this.genre = genre;
     }
 
@@ -96,7 +97,7 @@ public class Film  implements Comparable{
         return filmLength;
     }
 
-    public String getGenre() {
+    public ArrayList<String> getGenre() {
         return genre;
     }
 

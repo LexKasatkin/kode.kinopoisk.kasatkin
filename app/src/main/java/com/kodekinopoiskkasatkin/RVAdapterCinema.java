@@ -1,9 +1,11 @@
 package com.kodekinopoiskkasatkin;
 
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,8 +16,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -97,23 +101,7 @@ class RVAdapterCinema extends RecyclerView.Adapter<RVAdapterCinema.CinemaViewHol
         cinemaViewHolder.ivMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(ctx);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.setContentView(R.layout.dialog_map);
-                dialog.show();
-                GoogleMap googleMap;
-                MapView mMapView = (MapView) dialog.findViewById(R.id.mapView);
-                MapsInitializer.initialize(ctx);
 
-                mMapView = (MapView) dialog.findViewById(R.id.mapView);
-                if (mMapView != null) {
-                    googleMap = mMapView.getMap();
-//                    googleMap.addMarker(new MarkerOptions()
-//                            .anchor(0.0f, 1.0f)
-//                            .position(new LatLng(55.854049, 13.661331)));
-                }
-//                mMapView.onCreate(dialog.onSaveInstanceState());
-//                mMapView.onResume();// needed to get the map to display immediately
             }
         });
     }

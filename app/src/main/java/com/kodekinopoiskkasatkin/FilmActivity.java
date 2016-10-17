@@ -13,6 +13,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import cz.msebera.android.httpclient.HttpEntity;
 import cz.msebera.android.httpclient.HttpResponse;
@@ -93,7 +95,14 @@ public class FilmActivity extends AppCompatActivity {
                         film.setCountry(jsonObject.getString("country"));
                     }
                     if(jsonObject.has("genre")){
-                        film.setGenre(jsonObject.getString("genre"));
+                        ArrayList<String>genre=new ArrayList<String>();
+                        String gen=jsonObject.getString("genre");
+                        gen=gen.replace(" ","");
+                        String s[]=gen.trim().split(",");
+                        for(int i=0;i<s.length;i++){
+                            genre.add(s[i]);
+                        }
+                        film.setGenre(genre);
                     }
                     if(jsonObject.has("filmLength")){
                         film.setFilmLength(jsonObject.getString("filmLength"));
@@ -183,7 +192,15 @@ public class FilmActivity extends AppCompatActivity {
                 tvEnName.setText("("+film.year+")");
             }
             if(film.genre!=null){
-                tvGenre.setText(film.genre);
+                    String s=new String();
+                    for(int j=0;j<film.genre.size();j++) {
+                        if(j<film.genre.size()-1) {
+                            s = s + film.genre.get(j) + ", ";
+                        }else  if(j==film.genre.size()-1){
+                            s = s + film.genre.get(j);
+                        }
+                        tvGenre.setText(s);
+                    }
             }
             if(film.country!=null){
                 tvCountryYear.setText(film.country);
@@ -268,6 +285,11 @@ public class FilmActivity extends AppCompatActivity {
             case android.R.id.home:
                 this.onBackPressed();
                 this.finish();
+                return true;
+            case R.id.refresh:
+                FilmTask filmTask=new FilmTask();
+                filmTask.execute();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

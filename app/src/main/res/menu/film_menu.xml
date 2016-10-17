@@ -7,4 +7,12 @@
         android:icon="@drawable/seance"
         android:title="Сеансы"
         app:showAsAction="ifRoom|withText"></item>
+    <item
+        android:id="@+id/refresh"
+        android:orderInCategory="100"
+        android:icon="@drawable/refresh"
+        android:title="Обновить"
+        android:layout_width="35dp"
+        android:layout_height="50dp"
+        app:showAsAction="ifRoom|withText"></item>
 </menu>
